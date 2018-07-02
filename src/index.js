@@ -21,7 +21,6 @@ const getNewPath = (value, filename, root = '.') => {
   const newPath = [...split, dir].join(SPLIT_CHAR) + EXTENSION
   if (path.isAbsolute(newPath) || !newPath.startsWith('.')) {
     const fullAbsolutePath = path.resolve(root, newPath)
-    console.log(fullAbsolutePath)
     if (!exists(fullAbsolutePath)) return null
     return newPath
   } else {
