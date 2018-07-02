@@ -22,10 +22,29 @@ testCases.forEach(({ input, output }) => {
     const babeled = babel.transform(input, {
       babelrc: false,
       plugins: [
-        namedDirectory
+        [
+          namedDirectory, 
+          {
+            rootDir: 'src',
+          }
+        ]
       ]
     }).code
-    console.log(babeled)
     expect(babeled).toMatch(output)
   })
 })
+
+
+const x = babel.transformFileSync("./aaa/fil.js", {
+  babelrc: false,
+  plugins: [
+    [
+      namedDirectory, 
+      {
+        rootDir: 'src',
+      }
+    ]
+  ]}
+)
+
+console.log("x: ", x.code)
