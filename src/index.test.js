@@ -33,18 +33,3 @@ testCases.forEach(({ input, output }) => {
     expect(babeled).toMatch(output)
   })
 })
-
-
-const x = babel.transformFileSync("./aaa/fil.js", {
-  babelrc: false,
-  plugins: [
-    [
-      namedDirectory, 
-      {
-        rootDir: 'src',
-      }
-    ]
-  ]}
-)
-
-console.log("x: ", x.code)
