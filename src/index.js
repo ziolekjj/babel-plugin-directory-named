@@ -22,7 +22,8 @@ const getNewPath = (value, filename, root = '.') => {
   if (path.isAbsolute(newPath) || !newPath.startsWith('.')) {
     const fullAbsolutePath = path.resolve(root, newPath)
     if (!exists(fullAbsolutePath)) return null
-    return newPath
+    const newRelativePath = path.relative(path.dirname(filename), fullAbsolutePath)
+    return newRelativePath
   } else {
     const fullPath = path.resolve(path.resolve(filename, '..'), newPath)
     if (!exists(fullPath)) return null
