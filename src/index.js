@@ -14,6 +14,11 @@ const hasSource = (path) => {
   return true
 }
 
+const hasGoodSuffix = (path) => {
+  if(path.endsWith(`/${EXTENSION}`) || path.endsWith(`.${EXTENSION}`)) return false
+  return true
+}
+
 const getNewPath = (value, filename, root = '.') => {
   if (path.extname(value) !== '') return null
   const split = value.split(SPLIT_CHAR)
@@ -23,11 +28,20 @@ const getNewPath = (value, filename, root = '.') => {
     const fullAbsolutePath = path.resolve(root, newPath)
     if (!exists(fullAbsolutePath)) return null
     const newRelativePath = path.relative(path.dirname(filename), fullAbsolutePath)
+    if(!newRelativePath.startsWith('.')) return `./${newRelativePath}`
     return newRelativePath
-  } else {
+  } else if (hasGoodSuffix(newPath)){
     const fullPath = path.resolve(path.resolve(filename, '..'), newPath)
     if (!exists(fullPath)) return null
     return newPath
+  } else {
+    const optimizedPath = newPath.slice(0, -3)
+    const dirPath = path.resolve(path.resolve(filename, '..'), optimizedPath)
+    const dirName = dirPath.split(SPLIT_CHAR).slice(-2, -1)[0]
+    const fullPath = path.resolve(dirPath, dirName + EXTENSION)
+    if (!exists(fullPath)) return null
+    const newOptimizedPath = path.resolve(optimizedPath, dirName + EXTENSION)
+    return newOptimizedPath
   }
 }
 
