@@ -35,12 +35,12 @@ const getNewPath = (value, filename, root = '.') => {
     if (!exists(fullPath)) return null
     return newPath
   } else {
-    const optimizedPath = newPath.slice(0, -3)
+    const optimizedPath = newPath.slice(0, -(EXTENSION.length + 1))
     const dirPath = path.resolve(path.resolve(filename, '..'), optimizedPath)
-    const dirName = dirPath.split(SPLIT_CHAR).slice(-2, -1)[0]
+    const dirName = dirPath.split(SPLIT_CHAR).slice(-1)[0]
     const fullPath = path.resolve(dirPath, dirName + EXTENSION)
     if (!exists(fullPath)) return null
-    const newOptimizedPath = path.resolve(optimizedPath, dirName + EXTENSION)
+    const newOptimizedPath = `${optimizedPath}${dirName}${EXTENSION}`
     return newOptimizedPath
   }
 }
