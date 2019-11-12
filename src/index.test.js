@@ -14,6 +14,10 @@ const testCases = [
   {
     input: `const Module = require('./test_dir/Module')`,
     output: `const Module = require('./test_dir/Module/Module.js')`
+  },
+  {
+    input: `const Module = require('./test_dir/path/with/IndexModule')`,
+    output: `const Module = require('./test_dir/path/with/IndexModule/index.js')`
   }
 ]
 
