@@ -24,6 +24,7 @@ const getNewPath = (value, filename, root = '.') => {
   const split = value.split(SPLIT_CHAR)
   const dir = split.slice(-1)[0]
   const newPath = [...split, dir].join(SPLIT_CHAR) + EXTENSION
+
   if (path.isAbsolute(newPath) || !newPath.startsWith('.')) {
     const fullAbsolutePath = path.resolve(root, newPath)
     if (!exists(fullAbsolutePath)) return null
@@ -31,6 +32,13 @@ const getNewPath = (value, filename, root = '.') => {
     if(!newRelativePath.startsWith('.')) return `./${newRelativePath}`
     return newRelativePath
   } else if (hasGoodSuffix(newPath)){
+
+    // test if regular import path work: `path/to/import/index.js`
+    const regularImportPath = `${value}/index.js`
+    if (exists(path.resolve(path.resolve(filename, '..'), regularImportPath))) {
+      return regularImportPath
+    }
+    
     const fullPath = path.resolve(path.resolve(filename, '..'), newPath)
     if (!exists(fullPath)) return null
     return newPath
