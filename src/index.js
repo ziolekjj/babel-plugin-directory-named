@@ -33,7 +33,7 @@ const getNewPath = (value, filename, root = '.', honorIndex) => {
     return newRelativePath
   } else if (hasGoodSuffix(newPath)){
 
-    // test if regular import path work: `path/to/import/index.js`
+    // test if regular import paths work: `path/to/import/index.js`
     if (honorIndex) {
       const regularImportPath = `${value}/index.js`
       if (exists(path.resolve(path.resolve(filename, '..'), regularImportPath))) {
