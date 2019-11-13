@@ -19,7 +19,7 @@ const hasGoodSuffix = (path) => {
   return true
 }
 
-const getNewPath = (value, filename, root = '.') => {
+const getNewPath = (value, filename, root = '.', honorIndex) => {
   if (path.extname(value) !== '') return null
   const split = value.split(SPLIT_CHAR)
   const dir = split.slice(-1)[0]
@@ -34,9 +34,11 @@ const getNewPath = (value, filename, root = '.') => {
   } else if (hasGoodSuffix(newPath)){
 
     // test if regular import path work: `path/to/import/index.js`
-    const regularImportPath = `${value}/index.js`
-    if (exists(path.resolve(path.resolve(filename, '..'), regularImportPath))) {
-      return regularImportPath
+    if (honorIndex) {
+      const regularImportPath = `${value}/index.js`
+      if (exists(path.resolve(path.resolve(filename, '..'), regularImportPath))) {
+        return regularImportPath
+      }
     }
     
     const fullPath = path.resolve(path.resolve(filename, '..'), newPath)
@@ -65,6 +67,10 @@ const getRootDir = (state) => {
   return state.opts.rootDir || 'src'
 }
 
+const getHonorIndex = (state) => {
+  return state.opts.honorIndex
+}
+
 export default function visitor ({ types: t }) {
   return {
     visitor: {
@@ -72,7 +78,8 @@ export default function visitor ({ types: t }) {
         const { value } = path.node.source
         const { filename } = state.file.opts
         const rootDir = getRootDir(state)
-        const newPath = getNewPath(value, filename, rootDir)
+        const honorIndex = getHonorIndex(state)
+        const newPath = getNewPath(value, filename, rootDir, honorIndex)
         if (!newPath) return
         const newSource = t.stringLiteral(value.replace(value, newPath))
         path.node.source = newSource
@@ -83,7 +90,8 @@ export default function visitor ({ types: t }) {
         const { value } = path.node.source
         const { filename } = state.file.opts
         const rootDir = getRootDir(state)
-        const newPath = getNewPath(value, filename, rootDir)
+        const honorIndex = getHonorIndex(state)
+        const newPath = getNewPath(value, filename, rootDir, honorIndex)
         if (!newPath) return
         const newSource = t.stringLiteral(value.replace(value, newPath))
         path.node.source = newSource
@@ -95,7 +103,8 @@ export default function visitor ({ types: t }) {
         const { value } = node.arguments[0]
         const { filename } = state.file.opts
         const rootDir = getRootDir(state)
-        const newPath = getNewPath(value, filename, rootDir)
+        const honorIndex = getHonorIndex(state)
+        const newPath = getNewPath(value, filename, rootDir, honorIndex)
         if (!newPath) return
         path.node.arguments[0] = t.stringLiteral(value.replace(value, newPath))
       }

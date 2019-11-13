@@ -30,6 +30,7 @@ testCases.forEach(({ input, output }) => {
           namedDirectory, 
           {
             rootDir: 'src',
+            honorIndex: true
           }
         ]
       ]
