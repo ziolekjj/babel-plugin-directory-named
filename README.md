@@ -31,7 +31,7 @@ npm install --save-dev babel-plugin-directory-named
       "babel-plugin-directory-named",
       {
         "rootDir": "./src"
-        "honorIndex": true
+        "honorIndex": true | false // (default: false)
       }
     ]
   ]
