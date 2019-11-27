@@ -19,6 +19,12 @@ const hasGoodSuffix = (path) => {
   return true
 }
 
+// We do not want to extend directory-named into node_modules. This can become
+// a configuration option.
+const excludeModules = (filename, exclude = '/node_modules/') => {
+  return filename.includes(exclude)
+}
+
 const getNewPath = (value, filename, root = '.', honorIndex) => {
   if (path.extname(value) !== '') return null
   const split = value.split(SPLIT_CHAR)
@@ -77,6 +83,11 @@ export default function visitor ({ types: t }) {
       ImportDeclaration (path, state) {
         const { value } = path.node.source
         const { filename } = state.file.opts
+
+        if (excludeModules(filename)) {
+          return
+        }
+
         const rootDir = getRootDir(state)
         const honorIndex = getHonorIndex(state)
         const newPath = getNewPath(value, filename, rootDir, honorIndex)
@@ -89,6 +100,11 @@ export default function visitor ({ types: t }) {
         if (!hasSource(path)) return
         const { value } = path.node.source
         const { filename } = state.file.opts
+        
+        if (excludeModules(filename)) {
+          return
+        }
+
         const rootDir = getRootDir(state)
         const honorIndex = getHonorIndex(state)
         const newPath = getNewPath(value, filename, rootDir, honorIndex)
@@ -102,6 +118,11 @@ export default function visitor ({ types: t }) {
         if (!isRequire(node, t)) return
         const { value } = node.arguments[0]
         const { filename } = state.file.opts
+
+        if (excludeModules(filename)) {
+          return
+        }
+
         const rootDir = getRootDir(state)
         const honorIndex = getHonorIndex(state)
         const newPath = getNewPath(value, filename, rootDir, honorIndex)
