@@ -1,5 +1,5 @@
 {
-  "name": "@chatterbug/babel-plugin-directory-named",
+  "name": "babel-plugin-directory-named",
   "version": "1.2.0",
   "description": "Babel plugin directory named modules",
   "license": "MIT",
